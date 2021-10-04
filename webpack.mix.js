@@ -17,6 +17,7 @@ mix.js('resources/js/app.js', 'public/js')
 mix.scripts(
     [
         'node_modules/dropzone/dist/min/dropzone.min.js',
+        'node_modules/chart.js/dist/chart.min.js',
     ], 
     'public/js/all.js'
 );

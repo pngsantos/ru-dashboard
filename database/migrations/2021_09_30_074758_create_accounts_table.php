@@ -23,6 +23,7 @@ class CreateAccountsTable extends Migration
             $table->string('tags')->nullable();
             $table->tinyInteger('split');
             $table->integer('mmr')->nullable();
+            $table->integer('unclaimed_slp')->nullable();
             $table->date('next_claim_date')->nullable();
             $table->integer('created_by')->nullable();
             $table->string('notes')->nullable();

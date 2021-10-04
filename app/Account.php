@@ -15,13 +15,15 @@ class Account extends Model
         'tags',
         'split',
         'mmr',
+        'unclaimed_slp',
         'next_claim_date',
         'notes',
         'created_by',
     ];
 
     protected $casts = [
-        'tags' => 'array'
+        'tags' => 'array',
+        'next_claim_date' => 'date'
     ];
     
     public function user()
@@ -32,5 +34,10 @@ class Account extends Model
     public function scholar()
     {
         return $this->hasOne('App\Scholar', 'id', 'scholar_id');
+    }
+    
+    public function logs()
+    {
+        return $this->hasMany('App\AccountLog', 'account_id', 'id');
     }
 }

@@ -69,4 +69,12 @@ class AccountController extends Controller
 
         return redirect()->back()->with('success', 'Accounts Added');
     }
+
+    public function view($account_id)
+    {
+        $account = Account::with(['logs'])->find($account_id);
+
+        return view('account')
+            ->with('account', $account);
+    }
 }

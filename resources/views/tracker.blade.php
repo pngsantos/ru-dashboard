@@ -108,7 +108,7 @@
 			</td>
 			<td>
 				<div>
-					<span class="font-weight-bold">{{$account->name}}</span>
+					<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{$account->name}}</a>
 					@if($account->tags)
 					@foreach($account->tags as $tag)
 					<span class="badge badge-secondary text-capitalize">{{$tag}}</span>
@@ -121,28 +121,28 @@
 				</div>
 			</td>
 			<td>
-				-
+				{{@$account->logs->last()->slp}}
+			</td>
+			<td>
+				{{@$account->logs->take(-2)->first()->slp}}
+			</td>
+			<td>
+				{{@$account->logs->pluck('slp')->avg()}}
 			</td>
 			<td>
 				-
 			</td>
 			<td>
-				-
+				{{$account->next_claim_date->format("M d, Y")}}
 			</td>
 			<td>
-				-
+				{{$account->unclaimed_slp}}
 			</td>
 			<td>
-				-
+				{{0.01 * (100 - $account->split) * $account->unclaimed_slp}}
 			</td>
 			<td>
-				-
-			</td>
-			<td>
-				-
-			</td>
-			<td>
-				-
+				{{0.01 * $account->split * $account->unclaimed_slp}}
 			</td>
 			<td class="text-right">
 				<button type="button" class="btn btn-sm btn-outline-secondary">
