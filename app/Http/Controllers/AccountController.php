@@ -77,4 +77,58 @@ class AccountController extends Controller
         return view('account')
             ->with('account', $account);
     }
+
+    public function edit($account_id)
+    {
+        $account = Account::with(['logs', 'scholar'])->find($account_id);
+
+
+        $response_html = view('modals.partials.edit-account-form')
+            ->with('account', $account)
+            ->render();
+
+        $response = [];
+        $response['html'] = $response_html;
+        return response($response, 200);
+    }
+
+    public function update($account_id, Request $request)
+    {
+        $input = $request->all();
+
+        $account = Account::find($account_id);
+
+        $account->update([
+            'name' => $input['name'],
+            'code' => $input['code'],
+            'ronin_address' => $input['ronin_address'],
+            'tags' => @$input['tags'],
+            'split' => $input['split'],
+            'notes' => $input["notes"]
+        ]);
+
+        if($account->scholar)
+        {
+            $account->scholar->update([
+                'first_name' => $input["first_name"],
+                'last_name' => $input["last_name"],
+                'email' => $input["email"],
+                'payment_method' => $input["payment_method"],
+                'payment_account' => $input["payment_account"],
+                'payment_account_number' => $input["payment_account_number"],
+                'mobile' => $input["mobile"],
+                'address' => $input["address"],
+                'referrer' => $input["referrer"],
+                'notes' => $input["scholar_notes"],
+                'discord' => $input["discord"]
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Account Added');
+    }
+
+    public function delete(Request $request)
+    {
+        $input = $request->all();
+    }
 }

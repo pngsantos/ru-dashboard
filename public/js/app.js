@@ -37345,6 +37345,41 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+$(document).ready(function () {
+  $("*[data-modal]").click(function () {
+    var modal = $(this).data('modal');
+    var view = $(this).data('view');
+    var route = $(this).data('route');
+
+    if (!route) {
+      route = BASE_URL + "/api/modal/load/";
+    }
+
+    data = {};
+
+    if (view) {
+      data = {
+        'view': view
+      };
+    }
+
+    $(modal).find(".modal-content").html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+    $.ajax({
+      type: 'get',
+      url: route,
+      data: data,
+      success: function success(response) {
+        console.log(response);
+        $(modal).find(".modal-content").html(response.html);
+        $(modal).modal('show');
+      },
+      error: function error(data, text, _error) {
+        console.log(data);
+      }
+    });
+  });
+});
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

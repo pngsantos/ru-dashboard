@@ -38,6 +38,11 @@ class DashboardController extends Controller
             ->with('accounts', $accounts);
     }
 
+    public function cron_slp()
+    {
+        
+    }
+
     public function test()
     {
         $response = Http::retry(5, 100)->get('https://game-api.skymavis.com/game-api/clients/0xc352a18bf290c38c5d7d3b530802929f6658ab6d/items/1');

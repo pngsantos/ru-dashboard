@@ -35,4 +35,10 @@ class AuthController extends Controller
             return back()->with('error-big', 'Email and/or password invalid.');
         }
     }
+
+    public function do_logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
+    }
 }
