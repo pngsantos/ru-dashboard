@@ -37371,6 +37371,7 @@ $(document).ready(function () {
       success: function success(response) {
         console.log(response);
         $(modal).find(".modal-content").html(response.html);
+        $(modal).find(".modal-content *[name='_token']").val($("#csrf-token").attr('content'));
         $(modal).modal('show');
       },
       error: function error(data, text, _error) {

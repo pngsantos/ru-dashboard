@@ -26,7 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('account')->group(function () {
         Route::get('{account_id}/view', 'AccountController@view')->name('accountView');
         Route::get('{account_id}/edit', 'AccountController@edit')->name('accountEdit');
+        
         Route::post('store', 'AccountController@store')->name('accountStore');
+        Route::post('delete', 'AccountController@delete')->name('accountDelete');
         Route::post('{account_id}/update', 'AccountController@update')->name('accountUpdate');
         Route::post('import', 'AccountController@import')->name('accountsImport');
     });

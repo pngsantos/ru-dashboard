@@ -133,10 +133,10 @@
 				-
 			</td>
 			<td>
-				{{$account->next_claim_date->format("M d, Y")}}
+				{{$account->next_claim_date ? $account->next_claim_date->format("M d, Y") : "-"}}
 			</td>
 			<td>
-				{{$account->unclaimed_slp}}
+				{{@$account->unclaimed_slp}}
 			</td>
 			<td>
 				{{0.01 * (100 - $account->split) * $account->unclaimed_slp}} <small class="text-muted">({{(100 - $account->split)}}%)</small>
@@ -150,7 +150,7 @@
 					  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
 					</svg>
 				</button>
-				<button type="button" class="btn btn-sm btn-outline-secondary">
+				<button type="button" class="btn btn-sm btn-outline-secondary account-delete" data-id="{{$account->id}}">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
 					  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
 					  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -173,5 +173,48 @@
 @push('added-modals')
 
 @include('modals.manage-account')
+
+@endpush
+
+@push('added-scripts')
+
+<script>
+$( document ).ready(function() {
+	$(".account-delete").click(function(){
+		let account_id = $(this).data('id');
+		let $tr = $(this).closest('tr');
+
+		Swal.fire({
+            title: "Delete this account?",
+            icon: "warning",
+            confirmButtonText: "Confirm",
+            closeOnConfirm: false,
+            reverseButtons: true,
+            showCancelButton: true
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+		            type: 'post',
+		            url: "{{route('accountDelete')}}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+		            data: {
+		            	account_id : account_id
+		            },
+		            success: function (response) {
+		                console.log(response);
+		                $tr.remove();
+		            },
+		            error: function (data, text, error) {
+		                console.log(data);
+		            }
+		        });
+            }
+        });
+
+	});
+});
+</script>
 
 @endpush

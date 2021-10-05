@@ -44,6 +44,7 @@
 
         <script src="{{asset('js/all.js')}}"></script>
         <script src="{{asset('js/app.js')}}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         @stack('added-scripts')
     </body>
 </html>

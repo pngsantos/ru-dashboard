@@ -38,16 +38,59 @@ class DashboardController extends Controller
             ->with('accounts', $accounts);
     }
 
-    public function cron_slp()
-    {
-        
-    }
-
     public function test()
     {
-        $response = Http::retry(5, 100)->get('https://game-api.skymavis.com/game-api/clients/0xc352a18bf290c38c5d7d3b530802929f6658ab6d/items/1');
+        $date = Carbon::now();
 
-        dd($response->object());
+        $account = Account::find(1);
+        $ronin_address = Str::replaceFirst("ronin:", "0x", $account->ronin_address);
+
+        $response = Http::retry(5, 100)->get('https://game-api.skymavis.com/game-api/clients/'.$ronin_address.'/items/1');
+
+        $data = $response->object();
+        // dd($data);
+
+        if($data->success)
+        {
+            //Query logs
+            $logs = AccountLog::where('account_id', $account->id)->where('date', $date->format('Y-m-d'))->get();
+
+            if($logs->count() < 1)
+            {
+                $last_claimed = Carbon::parse($data->last_claimed_item_at);
+                $prev = AccountLog::where('account_id', 1)->where('date', $date->copy()->subDays(1)->format('Y-m-d'))->first();
+
+                if(!$prev)
+                {
+                    $slp = $data->total;
+                }
+                elseif($account->next_claim_date->isBefore($last_claimed))
+                {
+                    $slp = $data->total;
+                }
+                elseif( ($data->total - $prev->slp) <= 0)
+                {
+                    $slp = $data->total;
+                }
+                else
+                {
+                    $slp = $data->total - $prev;
+                }
+
+                $prev = $slp;
+
+                AccountLog::create( [
+                    'account_id' => $account->id,
+                    'scholar_id' => $account->scholar_id,
+                    'date' => $date,
+                    'slp' => $slp,
+                    'unclaimed_slp' => $data->total,
+                    'slp_scholar' => 0,
+                ]);
+
+                $account->update(['unclaimed_slp' => $data->total, 'next_claim_date' => $last_claimed->copy()->addDays(7)]);
+            }
+        }
     }
 
     public function seed()

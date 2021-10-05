@@ -130,5 +130,13 @@ class AccountController extends Controller
     public function delete(Request $request)
     {
         $input = $request->all();
+
+        $account = Account::find($input['account_id']);
+
+        $account->delete();
+
+        $response = [];
+        $response['success'] = true;
+        return response($response, 200);
     }
 }

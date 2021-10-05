@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        Commands\TodaySLP::class,
     ];
 
     /**
@@ -25,6 +26,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // $schedule->command('TodaySLP:pull')->everyMinute();
+        $schedule->command('TodaySLP:pull')->timezone('Asia/Manila')->dailyAt('08:00');
+
     }
 
     /**
