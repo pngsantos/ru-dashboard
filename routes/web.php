@@ -12,6 +12,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/clear-cache', function() {
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('view:clear');
+    // return what you want
+});
+
+Route::get('/sync-axies', function() {
+    $exitCode = Artisan::call('AxieUpdates:sync');
+    // return what you want
+});
+
+Route::get('/pull-slp-api', function() {
+    $exitCode = Artisan::call('TodaySLP:pull');
+    // return what you want
+});
+
 Route::get('/test', 'DashboardController@test')->name('test');
 Route::get('/seed', 'DashboardController@seed')->name('seed');
 

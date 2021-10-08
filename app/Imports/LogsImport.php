@@ -31,12 +31,7 @@ class LogsImport implements ToModel, WithHeadingRow
                 'slp' => $row["slp"],
             ]);
         }
-        else
-        {
-            return false;
-        }
-        
-        
+    
         return $account;
     }
 

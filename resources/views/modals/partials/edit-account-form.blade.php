@@ -30,10 +30,10 @@
     	<div class="form-group">
 		    <label for="roninAddress">Tags</label>
 
-		    @foreach(App\ScholarTag::orderBy('tag')->get() as $tag)
+		    @foreach(App\ScholarTag::orderBy('tag')->get() as $index => $tag)
 		    <div class="form-check">
-				<input class="form-check-input" name="tags[]" type="checkbox" value="{{$tag->tag}}" id="tag-{{$tag->tag}}" {!! in_array($tag->tag, $account->tags) ? "checked='checked'" : "" !!}>
-				<label class="form-check-label text-capitalize" for="tag-{{$tag->tag}}">
+				<input class="form-check-input" name="tags[]" type="checkbox" value="{{$tag->tag}}" id="tag-{{$index}}" {!! in_array($tag->tag, $account->tags) ? "checked='checked'" : "" !!}>
+				<label class="form-check-label text-capitalize" for="tag-{{$index}}">
 				    {{$tag->tag}}
 				</label>
 			</div>
