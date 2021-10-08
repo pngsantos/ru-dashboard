@@ -41,6 +41,7 @@ class AccountsImport implements ToModel, WithHeadingRow
             'ronin_address' => $row['ronin_address'],
             'tags' => trim($row['type'] != "") ? explode(",", $row['type']) : null,
             'split' => $row['split'],
+            'owner' => $row["owner"],
             'notes' => $row["notes"],
             'created_by' => @Auth::user()->id,
         ]);

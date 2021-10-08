@@ -16,12 +16,12 @@ class CreateAccountLogsTable extends Migration
         Schema::create('account_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('account_id');
-            $table->foreignId('scholar_id');
+            $table->foreignId('scholar_id')->nullable();
             $table->datetime('date');
-            $table->integer('slp');
-            $table->integer('slp_scholar');
-            $table->integer('slp_unclaimed');
-            $table->mediumText('notes');
+            $table->integer('slp')->nullable();
+            $table->integer('slp_scholar')->nullable();
+            $table->integer('unclaimed_slp')->nullable();
+            $table->mediumText('notes')->nullable();
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form method="post" id="createAccount" action="{{route('accountStore')}}" class="form">
+    <form method="post" id="createAccount" action="{{route('accountStore')}}" class="form" onsubmit="return validateAccountForm()">
         @csrf
 		<h5>Account Details</h5>
 
@@ -32,12 +32,16 @@
 
 		    @foreach(App\ScholarTag::orderBy('tag')->get() as $tag)
 		    <div class="form-check">
-				<input class="form-check-input" name="tags[]" type="checkbox" value="{{$tag->tag}}" id="defaultCheck1">
-				<label class="form-check-label text-capitalize" for="defaultCheck1">
+				<input class="form-check-input" name="tags[]" type="checkbox" value="{{$tag->tag}}" id="tag-{{$tag->id}}">
+				<label class="form-check-label text-capitalize" for="tag-{{$tag->id}}">
 				    {{$tag->tag}}
 				</label>
 			</div>
 			@endforeach
+		</div>
+    	<div class="form-group">
+		    <label for="account-owner">Owner</label>
+		    <input type="text" name="owner" class="form-control" id="account-owner" aria-describedby="account-owner">
 		</div>
     	<div class="form-group">
 		    <label for="notes">Notes</label>
@@ -70,8 +74,11 @@
 
     	<div class="form-group">
 		    <label for="paymentMethod">Payment Method</label>
-		    <input type="text" name="payment_method" class="form-control" id="paymentMethod" aria-describedby="paymentHelp">
-		    <small id="paymentHelp" class="form-text text-muted">List here or dropdown</small>
+		    <select name="payment_method" class="form-control" id="paymentMethod" aria-describedby="paymentHelp" onchange="toggleAccountNumber(this)" placeholder='Payment Method'>
+		    	<option></option>
+		    	<option value="gcash">GCash</option>
+		    	<option value="ronin">Ronin</option>
+		    </select>
 		</div>
     	<div class="form-group">
 		    <label for="accountName">Account Name</label>
@@ -80,10 +87,11 @@
     	<div class="form-group">
 		    <label for="accountNumber">Account Number</label>
 		    <input type="text" name="payment_account_number" class="form-control" id="accountNumber">
+		    <small style="display:none" id="accountNameHelp" class="form-text text-muted">Public Ronin address with the ronin: prefix</small>
 		</div>
     	<div class="form-group">
 		    <label for="mobileNumber">Mobile Number</label>
-		    <input type="text" name="mobile" class="form-control" id="mobileNumber">
+		    <input type="tel" name="mobile" class="form-control" id="mobileNumber">
 		</div>
     	<div class="form-group">
 		    <label for="discord">Discord</label>

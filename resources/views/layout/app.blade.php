@@ -29,11 +29,26 @@
             <div class="row">
                 @include('layout.partials.sidebar')
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                    @if ($errors->any())
+                        <div class="alert alert-danger mt-3">
+                            <ul class="m-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="alert alert-success mt-3">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     @yield('content')
                 </main>
             </div>
             @else
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <main role="main">
                 @yield('content')
             </main>
             @endif

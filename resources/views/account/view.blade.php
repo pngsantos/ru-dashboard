@@ -4,12 +4,16 @@
 
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center my-3 border-bottom pb-3">
+    @if(Auth::check())
     <a class="btn btn-link" href="{{route('tracker')}}">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
         </svg>
     </a>
+    @endif
     <h1>{{$account->name}}</h1>
+
+    @if(Auth::check())
     <div class="btn-toolbar">
         <div class="btn-group">
             <button type="button" class="btn btn-light" data-modal="#manage-account-modal" data-route="{{route('accountEdit', [$account->id])}}">
@@ -19,6 +23,7 @@
             </button>
         </div>
     </div>
+    @endif
 </div>
 
 <div class="pt-3 pb-3 mb-3 border-bottom">
@@ -34,19 +39,7 @@
                     <p class="card-text">{{$account->notes}}</p>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    Scholar Profile
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title" data-profile="accountId">-</h5>
-                    <h6 class="card-subtitle mb-2 text-muted" data-profile="name">-</h6>
-                    <p class="card-text">{{$account->ronin_address}}</p>
-                </div>
-            </div>
-        </div>
-        @if($account->scholar)
-        <div class="col-6 mb-3">
+            @if(Auth::check() && $account->scholar)
             <div class="card">
                 <div class="card-header">
                     Scholar Details
@@ -104,8 +97,9 @@
                         {{$account->scholar->address ? $account->scholar->address : "No address indicated"}}
                     </li>
                     <li class="list-group-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-text-fill" viewBox="0 0 16 16">
-                          <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-discord" viewBox="0 0 16 16">
+                          <path d="M6.552 6.712c-.456 0-.816.4-.816.888s.368.888.816.888c.456 0 .816-.4.816-.888.008-.488-.36-.888-.816-.888zm2.92 0c-.456 0-.816.4-.816.888s.368.888.816.888c.456 0 .816-.4.816-.888s-.36-.888-.816-.888z"/>
+                          <path d="M13.36 0H2.64C1.736 0 1 .736 1 1.648v10.816c0 .912.736 1.648 1.64 1.648h9.072l-.424-1.48 1.024.952.968.896L15 16V1.648C15 .736 14.264 0 13.36 0zm-3.088 10.448s-.288-.344-.528-.648c1.048-.296 1.448-.952 1.448-.952-.328.216-.64.368-.92.472-.4.168-.784.28-1.16.344a5.604 5.604 0 0 1-2.072-.008 6.716 6.716 0 0 1-1.176-.344 4.688 4.688 0 0 1-.584-.272c-.024-.016-.048-.024-.072-.04-.016-.008-.024-.016-.032-.024-.144-.08-.224-.136-.224-.136s.384.64 1.4.944c-.24.304-.536.664-.536.664-1.768-.056-2.44-1.216-2.44-1.216 0-2.576 1.152-4.664 1.152-4.664 1.152-.864 2.248-.84 2.248-.84l.08.096c-1.44.416-2.104 1.048-2.104 1.048s.176-.096.472-.232c.856-.376 1.536-.48 1.816-.504.048-.008.088-.016.136-.016a6.521 6.521 0 0 1 4.024.752s-.632-.6-1.992-1.016l.112-.128s1.096-.024 2.248.84c0 0 1.152 2.088 1.152 4.664 0 0-.68 1.16-2.448 1.216z"/>
                         </svg>
                         {{$account->scholar->discord ? $account->scholar->discord : "No discord indicated"}}
                     </li>
@@ -118,32 +112,77 @@
                     @endif
                 </ul>
             </div>
+            @endif
         </div>
-        @endif
+        <div class="col-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span data-profile="accountId">-</span>
+                        <a target="_blank" href="https://marketplace.axieinfinity.com/profile/{{$account->ronin_address}}4/axie">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                          <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                        </svg>
+                    </a>
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted" data-profile="name">-</h6>
+                    <p class="card-text">{{$account->ronin_address}}</p>
+                </div>
+            </div>
+
+            @if(Auth::check())
+            <div class="mt-3" id="axies">
+                
+            </div>
+            @endif
+        </div>
     </div>
 </div>
 
+@if(!Auth::check())
+<div class="my-3 d-flex" style="gap:15px" id="axies">
+    
+</div>
+@endif
+
 <div class="pt-3 pb-3 mb-3 border-bottom">
-    <div class="row">
-        <div class="col-6">
-            <canvas class="w-100" id="myChart" height="200"></canvas>
-        </div>
-        <div class="col-6">
-            <table class="table" id="axies">
-                <thead class="thead-dark">
-                    <tr>
-                        <th style="width:80px" scope="col"></th>
-                        <th scope="col">Axie</th>
-                        <th scope="col">Class</th>
-                        <th scope="col">Breed</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <h2>Daily SLP</h2>
+    <canvas class="w-100 mb-3" id="myChart" height="200"></canvas>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">SLP</th>
+                <th scope="col">Scholar Input</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($account->logs as $log)
+            <tr>
+                <td>
+                    {{$log->date->format("M d, Y")}}
+                </td>
+                <td>
+                    {{$log->slp}}
+                </td>
+                <td>
+                    {{$log->slp_scholar}}
+                </td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-modal="#manage-log-modal" data-route="{{route('logEdit', [$log->id])}}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            @empty
+            @endif
+        </tbody>
+    </table>
 </div>
 
 
@@ -151,7 +190,11 @@
 
 @push('added-modals')
 
+@if(Auth::check())
 @include('modals.manage-account')
+@endif
+
+@include('modals.manage-log')
 
 @endpush
 
@@ -196,7 +239,8 @@ $( document ).ready(function() {
     $.ajax(inventory_variables).done(function (response) {
         response.data.axies.results.forEach(function(item){
             console.log(item);
-            $("#axies tbody").append('<tr> <td> <img src="' + item.image + '" class="img-thumbnail" alt=""> </td> <td> ' + item.name + ' </td> <td> ' + item.class + ' </td> <td> ' + item.breedCount + ' </td> <td> </td> </tr>');
+            $("#axies").append('<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-white"><div class="col-9 p-4 d-flex flex-column position-static"><strong class="d-inline-block mb-2 text-primary">' + item.name + '</strong><h4 class="mb-0">' + item.id + '</h4><div class="mb-1 text-muted">' + item.class + ' &middot; Breed Count ' + item.breedCount + '</div><a href="https://marketplace.axieinfinity.com/axie/' + item.id + '" target="_blank" class="stretched-link">Open in Market</a></div><div class="col-3 d-none d-lg-block"><img src="' + item.image + '" class="img-fluid" alt=""></div></div>');
+            // $("#axies tbody").append('<tr> <td> <img src="' + item.image + '" class="img-thumbnail" alt=""> </td> <td> ' + item.id + ' </td> <td> ' + item.class + ' </td> <td> ' + item.breedCount + ' </td> <td> </td> </tr>');
         });
     });
 

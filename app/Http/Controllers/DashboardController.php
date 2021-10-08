@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\User;
+use App\Axie;
 use App\Account;
 use App\AccountLog;
 
@@ -28,13 +29,23 @@ class DashboardController extends Controller
     {   
         $accounts = Account::with(['logs'])->get();
 
-        foreach($accounts as $account)
-        {
-            // dd($account->logs->take(-2)->first());
-            // dd($account->logs->pluck('slp')->avg());
-        }
-
         return view('tracker')
+            ->with('accounts', $accounts);
+    }
+
+    public function axies()
+    {
+        $axies = Axie::get();
+
+        return view('axies')
+            ->with('axies', $axies);
+    }
+
+    public function finance()
+    {
+        $accounts = Account::with(['logs'])->get();
+
+        return view('finance')
             ->with('accounts', $accounts);
     }
 
@@ -44,6 +55,51 @@ class DashboardController extends Controller
 
         $account = Account::find(1);
         $ronin_address = Str::replaceFirst("ronin:", "0x", $account->ronin_address);
+
+        $response = Http::post('https://axieinfinity.com/graphql-server-v2/graphql', [
+            'query' => "query GetAxieBriefList(\$auctionType: AuctionType, \$criteria: AxieSearchCriteria, \$from: Int, \$sort: SortBy, \$size: Int, \$owner: String) {\r\n    axies(auctionType: \$auctionType, criteria: \$criteria, from: \$from, sort: \$sort, size: \$size, owner: \$owner) {\r\n        total\r\n        results {\r\n        ...AxieBrief\r\n        __typename\r\n        }\r\n        __typename\r\n    }\r\n  }\r\n\r\nfragment AxieBrief on Axie {\r\n  id\r\n  name\r\n  stage\r\n  class\r\n  breedCount\r\n  image\r\n  title\r\n  battleInfo {\r\n    banned\r\n    __typename\r\n  }\r\n  auction {\r\n    currentPrice\r\n    currentPriceUSD\r\n    __typename\r\n  }\r\n  parts {\r\n    id\r\n    name\r\n    class\r\n    type\r\n    specialGenes\r\n    __typename\r\n  }\r\n  __typename\r\n  }\r\n",
+            'variables' => '{"from":0,"owner":"'.$ronin_address.'","size":24,"sort":"IdDesc"}'
+        ]);
+
+        $data = $response->object();
+
+        // dd($data->data);
+
+        foreach($data->data->axies->results as $axie)
+        {
+            $dupe = Axie::where('axie_id', $axie->id)->first();
+
+            if($dupe)
+            {
+                $dupe->update([
+                    'stage' => $axie->stage,
+                    'breed' => $axie->breedCount,
+                    'ronin_address' => $ronin_address,
+                    'class' => $axie->class,
+                    'image' => $axie->image,
+                    'parts' => $axie->parts
+                ]);
+                echo "Axie updated \n";
+
+            }
+            else
+            {
+                Axie::create([
+                    'axie_id' => $axie->id,
+                    'stage' => $axie->stage,
+                    'breed' => $axie->breedCount,
+                    'ronin_address' => $ronin_address,
+                    'class' => $axie->class,
+                    'image' => $axie->image,
+                    'parts' => $axie->parts
+                ]);
+                echo "Axie created \n";
+            }
+        }
+
+
+
+        /*
 
         $response = Http::retry(5, 100)->get('https://game-api.skymavis.com/game-api/clients/'.$ronin_address.'/items/1');
 
@@ -74,7 +130,7 @@ class DashboardController extends Controller
                 }
                 else
                 {
-                    $slp = $data->total - $prev;
+                    $slp = $data->total - $prev->slp;
                 }
 
                 $prev = $slp;
@@ -91,6 +147,7 @@ class DashboardController extends Controller
                 $account->update(['unclaimed_slp' => $data->total, 'next_claim_date' => $last_claimed->copy()->addDays(7)]);
             }
         }
+        */
     }
 
     public function seed()

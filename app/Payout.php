@@ -10,6 +10,7 @@ class Payout extends Model
         'account_id',
         'scholar',
         'slp',
+        'team_weight',
         'split',
         'from_date',
         'to_date',

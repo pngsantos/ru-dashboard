@@ -81,7 +81,7 @@ class TodaySLP extends Command
                     }
                     else
                     {
-                        $slp = $data->total - $prev;
+                        $slp = $data->total - $prev->slp;
                     }
 
                     $prev = $slp;

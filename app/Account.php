@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Scholarship;
+
 class Account extends Model
 {    
     protected $fillable = [
@@ -17,6 +19,7 @@ class Account extends Model
         'mmr',
         'unclaimed_slp',
         'next_claim_date',
+        'owner',
         'notes',
         'created_by',
     ];
@@ -39,5 +42,46 @@ class Account extends Model
     public function logs()
     {
         return $this->hasMany('App\AccountLog', 'account_id', 'id');
+    }
+
+    //Override create function to set start date and start balance
+    public static function create(array $data = [])
+    {
+        if(isset($data['scholar_id']))
+        {
+            //Create a new scholarship
+        }
+
+        $model = static::query()->create($data);
+
+        return $model;
+    }
+
+
+    public function save(array $options = [])
+    {
+        $account = $this;
+
+        $return = parent::save($options);
+
+
+        return $return;
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        $account = $this;
+
+        $return = parent::update($attributes, $options);
+
+        return $return;
+    }
+
+    public function kick_scholar()
+    {
+        $this->name = $this->code . " - xxx";
+
+        $this->scholar_id = null;
+        $this->save();
     }
 }

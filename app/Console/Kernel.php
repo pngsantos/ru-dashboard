@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->command('TodaySLP:pull')->everyMinute();
         $schedule->command('TodaySLP:pull')->timezone('Asia/Manila')->dailyAt('08:00');
+        $schedule->command('AxieUpdates:sync')->timezone('Asia/Manila')->dailyAt('08:00');
 
     }
 

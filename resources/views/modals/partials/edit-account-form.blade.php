@@ -5,7 +5,7 @@
     </button>
 	</div>
 <div class="modal-body">
-    <form method="post" id="createAccount" action="{{route('accountUpdate', $account->id)}}" class="form">
+    <form method="post" id="createAccount" action="{{route('accountUpdate', $account->id)}}" class="form" onsubmit="return validateAccountForm()">
         @csrf
 		<h5>Account Details</h5>
 
@@ -40,6 +40,10 @@
 			@endforeach
 		</div>
     	<div class="form-group">
+		    <label for="account-owner">Owner</label>
+		    <input type="text" name="owner" class="form-control" id="account-owner" value="{{$account->owner}}" aria-describedby="account-owner">
+		</div>
+    	<div class="form-group">
 		    <label for="notes">Notes</label>
 		    <textarea name="notes" id="notes" rows="5" class="form-control">{{$account->notes}}</textarea>
 		</div>
@@ -47,6 +51,11 @@
 		<hr />
 
 		<h5>Scholar Details</h5>
+
+    	<div class="form-group">
+		    <label for="scholarEmail">Email</label>
+		    <input type="email" class="form-control" id="scholarEmail" name="email" value="{{@$account->scholar->email}}">
+		</div>
 
 		<div class="row">
 			<div class="col-6">
@@ -70,8 +79,7 @@
 
     	<div class="form-group">
 		    <label for="paymentMethod">Payment Method</label>
-		    <input type="text" name="payment_method" value="{{@$account->scholar->payment_method}}" class="form-control" id="paymentMethod" aria-describedby="paymentHelp">
-		    <small id="paymentHelp" class="form-text text-muted">List here or dropdown</small>
+		    {!! Form::select('payment_method', ['gcash'=>'GCash', 'ronin'=>'Ronin'], @$account->scholar->payment_method,  ['class'=>'form-control', 'placeholder'=>'Payment Method',  'onchange'=>"toggleAccountNumber(this)"]) !!}
 		</div>
     	<div class="form-group">
 		    <label for="accountName">Account Name</label>
@@ -80,10 +88,11 @@
     	<div class="form-group">
 		    <label for="accountNumber">Account Number</label>
 		    <input type="text" name="payment_account_number" value="{{@$account->scholar->payment_account_number}}" class="form-control" id="accountNumber">
+		    <small style="{!! @$account->scholar->payment_method == 'ronin' ? '' : 'display:none' !!}" id="accountNameHelp" class="form-text text-muted">Public Ronin address with the ronin: prefix</small>
 		</div>
     	<div class="form-group">
 		    <label for="mobileNumber">Mobile Number</label>
-		    <input type="text" name="mobile" value="{{@$account->scholar->mobile}}" class="form-control" id="mobileNumber">
+		    <input type="tel" name="mobile" value="{{@$account->scholar->mobile}}" class="form-control" id="mobileNumber">
 		</div>
     	<div class="form-group">
 		    <label for="discord">Discord</label>

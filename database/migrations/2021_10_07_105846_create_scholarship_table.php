@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePayoutsTable extends Migration
+class CreateScholarshipTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,13 @@ class CreatePayoutsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payouts', function (Blueprint $table) {
+        Schema::create('scholarship', function (Blueprint $table) {
             $table->id();
             $table->foreignId('account_id');
             $table->foreignId('scholar_id');
-            $table->integer('split');
-            $table->decimal('slp');
-            $table->decimal('usd');
-            $table->decimal('bonus');
-            $table->tinyInteger('team_weight')->nullable();
-            $table->datetime('from_date');
-            $table->datetime('to_date')->nullable();
+            $table->datetime('start_date');
+            $table->datetime('end_date')->nullable();
+            $table->integer('created_by');
             $table->timestamps();
         });
     }
@@ -35,6 +31,6 @@ class CreatePayoutsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payouts');
+        Schema::dropIfExists('scholarship');
     }
 }
