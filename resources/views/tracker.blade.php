@@ -102,15 +102,21 @@
 			<td>
 				<div>
 					<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{$account->name}}</a>
+
+					@if($account->scholar)
+					&middot;
+					<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{Str::limit($account->scholar->name, 16)}}</a>
+					@endif
+				</div>
+				<div class="text-muted">
+					{{$account->code}} &middot; Started {{$account->start_date->diffForHumans()}}
+				</div>
+				<div>
 					@if($account->tags)
 					@foreach($account->tags as $tag)
 					<span class="badge badge-secondary text-capitalize">{{$tag}}</span>
 					@endforeach
 					@endif
-					
-				</div>
-				<div class="text-muted">
-					{{$account->code}}
 				</div>
 			</td>
 			<td>

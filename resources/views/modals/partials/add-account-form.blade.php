@@ -103,7 +103,27 @@
 		</div>
     	<div class="form-group">
 		    <label for="address">Address</label>
-		    <textarea name="address" id="address" rows="5" class="form-control"></textarea>
+		    <input type="text" name="address" class="form-control mb-2" id="address">
+		    <input type="text" name="address2" class="form-control" id="address2">
+		</div>
+
+	    <div class="row">
+	    	<div class="col-6">
+    			<div class="form-group">
+				    <label for="city">City</label>
+				    <input type="text" name="city" class="form-control" id="city">
+		    	</div>
+	    	</div>
+	    	<div class="col-6">
+    			<div class="form-group">
+				    <label for="province">Province</label>
+				    <input type="text" name="province" class="form-control" id="province">
+		    	</div>
+	    	</div>
+	    </div>
+    	<div class="form-group">
+		    <label for="zip">Zip</label>
+		    <input type="number" name="zip" class="form-control w-25" id="zip">
 		</div>
     	<div class="form-group">
 		    <label for="scholar_notes">Scholar Notes</label>

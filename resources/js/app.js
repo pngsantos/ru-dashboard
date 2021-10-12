@@ -36,5 +36,26 @@ $( document ).ready(function() {
                 console.log(data);
             }
         });
-	})
+	});
 });
+
+function pullDailySLP(ronin, cb)
+{
+    let ronin_address = ronin.replace("ronin:", "0x");
+
+	$.ajax({
+	    type: 'get',
+	    url: 'https://game-api.skymavis.com/game-api/clients/' + ronin_address + '/items/1',
+	    success: function (response) {
+	        console.log(response);
+
+	        if(cb)
+	        {
+	        	cb(response);
+	        }
+	    },
+	    error: function (data, text, error) {
+	        console.log(data);
+	    }
+	});
+}

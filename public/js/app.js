@@ -37381,6 +37381,24 @@ $(document).ready(function () {
   });
 });
 
+function pullDailySLP(ronin, cb) {
+  var ronin_address = ronin.replace("ronin:", "0x");
+  $.ajax({
+    type: 'get',
+    url: 'https://game-api.skymavis.com/game-api/clients/' + ronin_address + '/items/1',
+    success: function success(response) {
+      console.log(response);
+
+      if (cb) {
+        cb(response);
+      }
+    },
+    error: function error(data, text, _error2) {
+      console.log(data);
+    }
+  });
+}
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

@@ -24,18 +24,26 @@ class LogsImport implements ToModel, WithHeadingRow
 
         if($account)
         {
-            $log = AccountLog::create([
-                'account_id' => $account->id,
-                'scholar_id' => $account->scholar_id,
-                'date' => $this->transformDate($row['date']),
-                'slp' => $row["slp"],
-            ]);
+            $date = $this->transformDate($row['date']);
+            $dupe = AccountLog::where('account_id', $account->id)->where('date', $date)->first();
+
+            if(!$dupe)
+            {
+                $log = AccountLog::create([
+                    'account_id' => $account->id,
+                    'scholar_id' => $account->scholar_id,
+                    'date' => $date,
+                    'slp' => $row["slp"],
+                ]);   
+            }
+
+            // dd($log->id);
         }
     
         return $account;
     }
 
-    public function transformDate($value, $format = 'Y-m-d')
+    public function transformDate($value, $format = 'm/d/Y')
     {
         try {
             return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));

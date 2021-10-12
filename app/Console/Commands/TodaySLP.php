@@ -44,7 +44,7 @@ class TodaySLP extends Command
      */
     public function handle()
     {
-        $date = Carbon::now();
+        $date = Carbon::now()->subDay();
         $accounts = Account::whereNotNull('ronin_address')->get();
 
         foreach($accounts as $account)

@@ -23,6 +23,10 @@ class CreateScholarsTable extends Migration
             $table->string('payment_account_number')->nullable();
             $table->string('mobile')->nullable();
             $table->string('address')->nullable();
+            $table->string('address2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
+            $table->string('zip', 8)->nullable();
             $table->string('discord')->nullable();
             $table->string('referrer')->nullable();
             $table->string('notes')->nullable();

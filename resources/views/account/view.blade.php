@@ -253,7 +253,7 @@ $( document ).ready(function() {
         data: {
             labels: [
                 @foreach($account->logs as $log)
-                '{{$log->date->format("Y-m-d")}}',
+                '{{$log->date->format("m/d")}}',
                 @endforeach
             ],
             datasets: [{

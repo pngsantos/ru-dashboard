@@ -13,7 +13,7 @@ class CreateScholarshipTable extends Migration
      */
     public function up()
     {
-        Schema::create('scholarship', function (Blueprint $table) {
+        Schema::create('scholarships', function (Blueprint $table) {
             $table->id();
             $table->foreignId('account_id');
             $table->foreignId('scholar_id');
@@ -31,6 +31,6 @@ class CreateScholarshipTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scholarship');
+        Schema::dropIfExists('scholarships');
     }
 }

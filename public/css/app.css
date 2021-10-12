@@ -11040,11 +11040,11 @@ body#login .bd-placeholder-img {
 }
 
 .sidebar .nav-link {
-  font-weight: 500;
+  font-weight: bold;
   color: #333;
 }
 
-.sidebar .nav-link .feather {
+.sidebar .nav-link svg {
   margin-right: 4px;
   color: #999;
 }
@@ -11053,8 +11053,8 @@ body#login .bd-placeholder-img {
   color: #007bff;
 }
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
+.sidebar .nav-link:hover svg,
+.sidebar .nav-link.active svg {
   color: inherit;
 }
 

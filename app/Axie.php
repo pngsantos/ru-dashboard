@@ -20,4 +20,10 @@ class Axie extends Model
     protected $casts = [
         'parts' => 'array'
     ];
+    
+    public function account()
+    {
+        return $this->belongsTo('App\Account', 'account_id', 'id');
+    }
+    
 }

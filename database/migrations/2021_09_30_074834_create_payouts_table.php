@@ -17,12 +17,12 @@ class CreatePayoutsTable extends Migration
             $table->id();
             $table->foreignId('account_id');
             $table->foreignId('scholar_id');
-            $table->integer('split');
-            $table->decimal('slp');
-            $table->decimal('usd');
-            $table->decimal('bonus');
+            $table->integer('split')->nullable();
+            $table->decimal('slp')->nullable();
+            $table->decimal('usd')->nullable();
+            $table->decimal('bonus')->nullable();
             $table->tinyInteger('team_weight')->nullable();
-            $table->datetime('from_date');
+            $table->datetime('from_date')->nullable();
             $table->datetime('to_date')->nullable();
             $table->timestamps();
         });

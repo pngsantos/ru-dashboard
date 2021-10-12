@@ -32,7 +32,7 @@
 
 		    @foreach(App\ScholarTag::orderBy('tag')->get() as $index => $tag)
 		    <div class="form-check">
-				<input class="form-check-input" name="tags[]" type="checkbox" value="{{$tag->tag}}" id="tag-{{$index}}" {!! in_array($tag->tag, $account->tags) ? "checked='checked'" : "" !!}>
+				<input class="form-check-input" name="tags[]" type="checkbox" value="{{$tag->tag}}" id="tag-{{$index}}" {!! @in_array($tag->tag, $account->tags) ? "checked='checked'" : "" !!}>
 				<label class="form-check-label text-capitalize" for="tag-{{$index}}">
 				    {{$tag->tag}}
 				</label>
@@ -51,11 +51,6 @@
 		<hr />
 
 		<h5>Scholar Details</h5>
-
-    	<div class="form-group">
-		    <label for="scholarEmail">Email</label>
-		    <input type="email" class="form-control" id="scholarEmail" name="email" value="{{@$account->scholar->email}}">
-		</div>
 
 		<div class="row">
 			<div class="col-6">
@@ -102,10 +97,31 @@
 		    <label for="referrer">Referrer</label>
 		    <input type="text" name="referrer" value="{{@$account->scholar->referrer}}" class="form-control" id="referrer">
 		</div>
-    	<div class="form-group">
+		<div class="form-group">
 		    <label for="address">Address</label>
-		    <textarea name="address" id="address" rows="5" class="form-control">{{@$account->scholar->address}}</textarea>
+		    <input type="text" name="address" value="{{@$account->scholar->address}}" class="form-control mb-2" id="address">
+		    <input type="text" name="address2" value="{{@$account->scholar->address2}}" class="form-control" id="address2">
 		</div>
+
+	    <div class="row">
+	    	<div class="col-6">
+    			<div class="form-group">
+				    <label for="city">City</label>
+				    <input type="text" name="city" value="{{@$account->scholar->city}}" class="form-control" id="city">
+		    	</div>
+	    	</div>
+	    	<div class="col-6">
+    			<div class="form-group">
+				    <label for="province">Province</label>
+				    <input type="text" name="province" value="{{@$account->scholar->province}}" class="form-control" id="province">
+		    	</div>
+	    	</div>
+	    </div>
+    	<div class="form-group">
+		    <label for="zip">Zip</label>
+		    <input type="number" name="zip" value="{{@$account->scholar->zip}}" class="form-control w-25" id="zip">
+		</div>
+
     	<div class="form-group">
 		    <label for="scholar_notes">Scholar Notes</label>
 		    <textarea name="scholar_notes" id="scholar_notes" rows="5" class="form-control">{{@$account->scholar->notes}}</textarea>
@@ -113,6 +129,11 @@
 	</form>
 </div>
 <div class="modal-footer">
-	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary rounded-3" form="createAccount">Save</button>
+	<div class="d-flex w-100 justify-content-between">
+		<button type="button" class="btn btn-danger" onclick="kickScholar({{$account->id}})">Kick this Scholar</button>
+		<div>
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		    <button type="submit" class="btn btn-primary rounded-3" form="createAccount">Save</button>
+		</div>
+	</div>
 </div>

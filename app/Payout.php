@@ -8,7 +8,7 @@ class Payout extends Model
 {    
     protected $fillable = [
         'account_id',
-        'scholar',
+        'scholar_id',
         'slp',
         'team_weight',
         'split',

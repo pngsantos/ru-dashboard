@@ -35,9 +35,8 @@ class AccountController extends Controller
         ]);
 
         $input = $request->all();
-        // dd($input);
 
-        if(isset($data['email']))
+        if(isset($input['email']))
         {
             $scholar = Scholar::create([
                 'first_name' => $input["first_name"],
@@ -63,8 +62,7 @@ class AccountController extends Controller
             'tags' => @$input['tags'],
             'split' => $input['split'],
             'owner' => $input["owner"],
-            'notes' => $input["notes"],
-            'created_by' => @Auth::user()->id,
+            'notes' => $input["notes"]
         ]);
 
         return redirect()->back()->with('success', 'Account Added');
@@ -128,21 +126,11 @@ class AccountController extends Controller
         return response($response, 200);
     }
 
-    public function update($account_id, Request $request)
+    public function update_scholar($account_id, Request $request)
     {
         $input = $request->all();
 
         $account = Account::find($account_id);
-
-        $account->update([
-            'name' => $input['name'],
-            'code' => $input['code'],
-            'ronin_address' => $input['ronin_address'],
-            'tags' => @$input['tags'],
-            'split' => $input['split'],
-            'owner' => $input["owner"],
-            'notes' => $input["notes"]
-        ]);
 
         if($account->scholar)
         {
@@ -197,9 +185,101 @@ class AccountController extends Controller
                 'notes' => $input["scholar_notes"],
                 'discord' => $input["discord"]
             ]);
+
+            $account->scholar_id = $scholar->id;
+            $account->save();
         }
 
-        return redirect()->back()->with('success', 'Account Added');
+        return redirect()->back()->with('success', 'Scholar Details Updated');
+    }
+
+    public function update($account_id, Request $request)
+    {
+        $input = $request->all();
+
+        $account = Account::find($account_id);
+
+        $account->update([
+            'name' => $input['name'],
+            'code' => $input['code'],
+            'ronin_address' => $input['ronin_address'],
+            'tags' => @$input['tags'],
+            'split' => $input['split'],
+            'owner' => $input["owner"],
+            'notes' => $input["notes"]
+        ]);
+
+        if($account->scholar)
+        {
+            if($account->scholar->email && ($account->scholar->email == $input["email"]))
+            {
+                $account->scholar->update([
+                    'first_name' => $input["first_name"],
+                    'last_name' => $input["last_name"],
+                    'email' => $input["email"],
+                    'payment_method' => $input["payment_method"],
+                    'payment_account' => $input["payment_account"],
+                    'payment_account_number' => $input["payment_account_number"],
+                    'mobile' => $input["mobile"],
+                    'address' => $input["address"],
+                    'address2' => $input["address2"],
+                    'city' => $input["city"],
+                    'province' => $input["province"],
+                    'zip' => $input["zip"],
+                    'referrer' => $input["referrer"],
+                    'notes' => $input["scholar_notes"],
+                    'discord' => $input["discord"]
+                ]);
+            }
+            else
+            {
+                $scholar = Scholar::create([
+                    'first_name' => $input["first_name"],
+                    'last_name' => $input["last_name"],
+                    'email' => $input["email"],
+                    'payment_method' => $input["payment_method"],
+                    'payment_account' => $input["payment_account"],
+                    'payment_account_number' => $input["payment_account_number"],
+                    'mobile' => $input["mobile"],
+                    'address' => $input["address"],
+                    'address2' => $input["address2"],
+                    'city' => $input["city"],
+                    'province' => $input["province"],
+                    'zip' => $input["zip"],
+                    'referrer' => $input["referrer"],
+                    'notes' => $input["scholar_notes"],
+                    'discord' => $input["discord"]
+                ]);
+
+                $account->scholar_id = $scholar->id;
+                $account->save();
+            }
+        }
+        else
+        {
+            $scholar = Scholar::create([
+                'first_name' => $input["first_name"],
+                'last_name' => $input["last_name"],
+                'email' => $input["email"],
+                'payment_method' => $input["payment_method"],
+                'payment_account' => $input["payment_account"],
+                'payment_account_number' => $input["payment_account_number"],
+                'mobile' => $input["mobile"],
+                'address' => $input["address"],
+                'address2' => $input["address2"],
+                'city' => $input["city"],
+                'province' => $input["province"],
+                'zip' => $input["zip"],
+                'referrer' => $input["referrer"],
+                'notes' => $input["scholar_notes"],
+                'discord' => $input["discord"]
+            ]);
+
+            $account->scholar_id = $scholar->id;
+            $account->save();
+        }
+
+        return redirect()->back()->with('success', 'Account Updated');
     }
 
     public function pull_slp(Request $request)

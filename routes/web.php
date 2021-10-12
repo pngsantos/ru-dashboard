@@ -46,8 +46,11 @@ Route::prefix('account')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/tracker', 'DashboardController@tracker')->name('tracker');
+    Route::get('/daily_log', 'DashboardController@daily_log')->name('dailyLog');
     Route::get('/axies', 'DashboardController@axies')->name('axies');
-    Route::get('/finance', 'DashboardController@finance')->name('finance');
+    Route::get('/distros', 'DashboardController@distros')->name('distros');
+    Route::get('/inventory', 'DashboardController@inventory')->name('inventory');
+    Route::get('/payouts', 'DashboardController@payouts')->name('payouts');
 
     Route::prefix('account')->group(function () {
         Route::get('{account_id}/view', 'AccountController@view')->name('accountView');
@@ -56,6 +59,7 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'AccountController@store')->name('accountStore');
         Route::post('delete', 'AccountController@delete')->name('accountDelete');
         Route::post('{account_id}/update', 'AccountController@update')->name('accountUpdate');
+        Route::post('{account_id}/update_scholar', 'AccountController@update_scholar')->name('scholarUpdate');
         Route::post('import', 'AccountController@import')->name('accountsImport');
         Route::post('import_logs', 'AccountController@import_logs')->name('logsImport');
         Route::post('kick_scholar', 'AccountController@kick_scholar')->name('kickScholar');
