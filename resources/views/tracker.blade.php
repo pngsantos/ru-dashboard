@@ -109,7 +109,7 @@
 					@endif
 				</div>
 				<div class="text-muted">
-					{{$account->code}} &middot; Started {{$account->start_date->diffForHumans()}}
+					{{$account->code}} &middot; Started {{$account->date_started->diffForHumans()}}
 				</div>
 				<div>
 					@if($account->tags)

@@ -79,9 +79,20 @@ class AccountsImport implements ToModel, WithHeadingRow
             'split' => $row['split'],
             'owner' => $row["owner"],
             'notes' => $row["notes"],
+            'start_date' => @$row["start_date"],
+            'balance' => @$row["balance"],
             'created_by' => @Auth::user()->id,
         ]);
         
         return $account;
+    }
+
+    private function transformDate($value, $format = 'm/d/Y')
+    {
+        try {
+            return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));
+        } catch (\ErrorException $e) {
+            return \Carbon\Carbon::createFromFormat($format, $value);
+        }
     }
 }

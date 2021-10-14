@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('payout')->group(function () {
-        Route::get('{id}/view', 'AccountController@view')->name('payoutView');
+        Route::get('{id}/view', 'PayoutController@view')->name('payoutView');
+        Route::post('finalize', 'PayoutController@finalize')->name('finalizePayout');
     });
 });

@@ -13,4 +13,14 @@ class Scholarship extends Model
         'end_date',
         'created_by',
     ];
+    
+    public function account()
+    {
+        return $this->belongsTo('App\Account', 'account_id', 'id');
+    }
+    
+    public function scholar()
+    {
+        return $this->belongsTo('App\Scholar', 'scholar_id', 'id');
+    }
 }

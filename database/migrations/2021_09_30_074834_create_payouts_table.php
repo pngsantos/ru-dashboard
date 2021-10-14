@@ -21,6 +21,7 @@ class CreatePayoutsTable extends Migration
             $table->decimal('slp')->nullable();
             $table->decimal('usd')->nullable();
             $table->decimal('bonus')->nullable();
+            $table->decimal('balance')->nullable();
             $table->tinyInteger('team_weight')->nullable();
             $table->datetime('from_date')->nullable();
             $table->datetime('to_date')->nullable();

@@ -50,6 +50,25 @@
 
 		<hr />
 
+		<h5>Onboarding details</h5>
+
+		<div class="row">
+			<div class="col-6">
+				<div class="form-group">
+				    <label for="startDate">Start Date</label>
+				    <input type="date" class="form-control" id="startDate" name="start_date">
+				</div>
+			</div>
+			<div class="col-6">
+				<div class="form-group">
+				    <label for="initBalance">Initial Balance</label>
+				    <input type="number" class="form-control" id="initBalance" name="balance">
+				</div>
+			</div>
+		</div>
+
+		<hr />
+
 		<h5>Scholar Details</h5>
 
 		<div class="row">

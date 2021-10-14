@@ -11086,3 +11086,20 @@ body#login .bd-placeholder-img {
   border-radius: 0;
 }
 
+table.spreadsheet td input[type=text],
+table.spreadsheet td input[type=number],
+table.spreadsheet td input select {
+  width: 100%;
+}
+
+table.spreadsheet.header-sticky thead {
+  position: sticky;
+  top: 50px;
+  z-index: 1;
+}
+
+.sticky-footer {
+  position: fixed;
+  bottom: 0px;
+}
+

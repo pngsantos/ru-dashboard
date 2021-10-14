@@ -43,7 +43,7 @@ class LogsImport implements ToModel, WithHeadingRow
         return $account;
     }
 
-    public function transformDate($value, $format = 'm/d/Y')
+    private function transformDate($value, $format = 'm/d/Y')
     {
         try {
             return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value));

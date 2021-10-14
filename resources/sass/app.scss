@@ -155,3 +155,27 @@ body#login {
 	border-width: 0;
 	border-radius: 0;
 }
+
+table.spreadsheet {
+	td {
+		input {
+			&[type='text'], &[type='number'], select
+			{
+				width: 100%;
+			}
+		}
+	}
+
+	&.header-sticky {
+		thead {
+			position: sticky;
+			top: 50px;
+    		z-index: 1;
+		}
+	}
+}
+
+.sticky-footer {
+	position: fixed;
+	bottom: 0px;
+}

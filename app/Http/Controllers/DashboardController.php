@@ -57,8 +57,6 @@ class DashboardController extends Controller
             $query->whereDate('date', '<=', $end_date)->whereDate('date', '>=', $start_date)->orderBy('date', 'desc');
         }])->get();
 
-        // dd($accounts->first()->logs);
-
         return view('daily_log')
             ->with('period', $period)
             ->with('accounts', $accounts);
@@ -74,9 +72,12 @@ class DashboardController extends Controller
 
     public function inventory()
     {
-        $accounts = Account::with(['logs'])->get();
+        $accounts = Account::get();
+
+        $owners = $accounts->groupBy('owner');
 
         return view('inventory')
+            ->with('owners', $owners)
             ->with('accounts', $accounts);
     }
 
@@ -90,7 +91,23 @@ class DashboardController extends Controller
 
     public function payouts()
     {
-        $accounts = Account::with(['logs'])->get();
+        $accounts = Account::with(['logs'])->limit(50)->get();
+
+        foreach($accounts as $account)
+        {
+            $payout = $account->current_payout;
+
+            if($payout)
+            {
+                $log = AccountLog::where('account_id', $account->id)->whereDate('date', '>=', $payout->from_date)->whereDate('date', '<=', $payout->to_date)->get();
+            }
+            else
+            {
+                $log = collect([(object)['slp' => '0']]);
+            }
+
+            $account->scope = $log;
+        }
 
         return view('payouts')
             ->with('accounts', $accounts);

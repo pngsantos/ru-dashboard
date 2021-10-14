@@ -62,6 +62,8 @@ class AccountController extends Controller
             'tags' => @$input['tags'],
             'split' => $input['split'],
             'owner' => $input["owner"],
+            'start_date' => $input["start_date"],
+            'balance' => $input["balance"],
             'notes' => $input["notes"]
         ]);
 
@@ -205,6 +207,8 @@ class AccountController extends Controller
             'ronin_address' => $input['ronin_address'],
             'tags' => @$input['tags'],
             'split' => $input['split'],
+            'start_date' => $input["start_date"],
+            'balance' => $input["balance"],
             'owner' => $input["owner"],
             'notes' => $input["notes"]
         ]);

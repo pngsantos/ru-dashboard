@@ -12,9 +12,12 @@ use App\AccountLog;
 use Illuminate\Support\Facades\Auth;
 
 class Account extends Model
-{    
+{   
+    protected $balance;
+
     protected $fillable = [
         'name',
+        'group_id',
         'code',
         'scholar_id',
         'user_id',
@@ -66,14 +69,11 @@ class Account extends Model
         return $this->hasMany('App\Scholarship', 'account_id', 'id');
     }
 
-    public function getStartDateAttribute()
+    public function getDateStartedAttribute()
     {
-        if(isset($this->attributes['start_date']))
+        if($this->start_date)
         {
-            if($this->attributes['start_date'])
-            {
-                return $this->start_date;
-            }
+            return (Carbon::parse($this->start_date));
         }
 
         return $this->created_at;
@@ -94,6 +94,16 @@ class Account extends Model
         return 1000;
     }
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        if(isset($attributes['balance']))
+        {
+            $this->balance = $attributes['balance'];
+        }
+    }
+
     //Override create function to set start date and start balance
     public static function create(array $data = [])
     {
@@ -102,6 +112,25 @@ class Account extends Model
         $account = static::query()->create($data);
 
         return $account;
+    }
+
+    public function update(array $attributes = [], array $options = [])
+    {
+        if(isset($attributes['balance']))
+        {
+            $this->balance = $attributes['balance'];
+        }
+
+        $return = parent::update($attributes, $options);
+
+        return $return;
+    }
+
+    public function getCurrentPayoutAttribute()
+    {
+        $payout = Payout::where('account_id', $this->id)->orderBy('to_date')->limit(1)->first();
+
+        return $payout;
     }
 
 
@@ -136,7 +165,7 @@ class Account extends Model
                     $scholarship = Scholarship::create([
                         'account_id' => $this->id,
                         'scholar_id' => $this->scholar_id,
-                        'start_date' => $this->start_date,
+                        'start_date' => $this->date_started,
                         'end_date' => null,
                         'created_by' => $this->created_by,
                     ]);
@@ -147,7 +176,26 @@ class Account extends Model
         }
         elseif($start_date != $this->start_date)
         {
-            $this->create_new_payout();
+            if($this->start_date->isBefore($start_date))
+            {
+                if($this->current_payout)
+                {
+                    $this->current_payout->update([
+                        'from_date' => $this->date_started,
+                        'balance' => $this->balance,
+                        'to_date' => $this->date_started->next(Carbon::SATURDAY)->addDays(14),
+                    ]);
+                }
+                else
+                {
+                    $this->create_new_payout();
+                }
+            }
+            else
+            {
+                $this->create_new_payout();
+            }
+            
         }
 
         return $return;
@@ -199,8 +247,9 @@ class Account extends Model
             'slp' => null,
             'team_weight' => null,
             'split' => $this->split,
-            'from_date' => $this->start_date,
-            'to_date' => $this->start_date->addDays(22)->next(Carbon::SATURDAY),
+            'from_date' => $this->date_started,
+            'balance' => $this->balance,
+            'to_date' => $this->date_started->next(Carbon::SATURDAY)->addDays(14),
         ]);
     }
 }

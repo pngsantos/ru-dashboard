@@ -23,18 +23,14 @@
 		@forelse($accounts as $account)
 		<tr>
 			<td>
+				<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{$account->name}}</a>
+				@if($account->tags)
 				<div>
-					<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{$account->name}}</a>
-					@if($account->tags)
 					@foreach($account->tags as $tag)
 					<span class="badge badge-secondary text-capitalize">{{$tag}}</span>
 					@endforeach
-					@endif
-					
 				</div>
-				<div class="small text-muted">
-					{{$account->code}} &middot; Started {{$account->start_date->diffForHumans()}}
-				</div>
+				@endif
 			</td>
 			@foreach($period as $date)
 			<td scope="col text-center">

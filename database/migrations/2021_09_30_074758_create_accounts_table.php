@@ -17,6 +17,7 @@ class CreateAccountsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
+            $table->integer('group_id')->nullable();
             $table->foreignId('scholar_id')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->string('ronin_address')->unique();
