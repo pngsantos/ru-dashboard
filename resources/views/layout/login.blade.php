@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         
-        <title>RU Dashboard</title>
+        <title>RU Port</title>
 
         <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
 
@@ -23,6 +23,18 @@
         <link rel="stylesheet" href="{{asset('css/all.css')}}">
     </head>
     <body id="login">
+        @if (session('error'))
+            <div class="alert alert-danger mb-3">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="alert alert-success mb-3">
+                {{ session('success') }}
+            </div>
+        @endif
+
         @yield('content')
 
         @stack('added-modals')

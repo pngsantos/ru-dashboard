@@ -117,7 +117,7 @@ class AccountController extends Controller
 
     public function edit($account_id)
     {
-        $account = Account::with(['logs', 'scholar'])->find($account_id);
+        $account = Account::with(['logs', 'scholar', 'scholarships'])->find($account_id);
 
 
         $response_html = view('modals.partials.edit-account-form')

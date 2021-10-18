@@ -23,7 +23,7 @@ class PayoutController extends Controller
 
         foreach($accounts as $account)
         {
-            
+
         }
     }
 
@@ -35,7 +35,9 @@ class PayoutController extends Controller
 
         $logs = AccountLog::where('account_id', $payout->account->id)->whereDate('date', '>=', $payout->from_date)->whereDate('date', '<=', $payout->to_date)->get();
 
-        $payout->update(['status' => 'final', 'slp' => $logs->sum('slp'), 'team_weight' => $input['team_weight']]);
+        $rate = 0.01 * (100 - $payout->split) * $input['rate'];
+
+        $payout->update(['status' => 'final', 'usd' => $rate * $logs->sum('slp'), 'slp' => $logs->sum('slp'), 'bonus' => $input['bonus'], 'team_weight' => $input['team_weight']]);
 
         //Create a new payout
         $new = Payout::create([
@@ -52,5 +54,36 @@ class PayoutController extends Controller
         $response = [];
         $response['success'] = true;
         return response($response, 200);
+    }
+
+    public function edit($payout_id)
+    {
+        $payout = Payout::find($payout_id);
+
+        $response_html = view('modals.partials.edit-payout-form')
+            ->with('payout', $payout)
+            ->render();
+
+        $response = [];
+        $response['html'] = $response_html;
+        return response($response, 200);
+    }
+
+    public function update($payout_id, Request $request)
+    {
+        $input = $request->all();
+
+        $payout = Payout::find($payout_id);
+
+        $payout->update([
+            'from_date' => $input["from_date"],
+            'to_date' => $input["to_date"],
+            'balance' => $input["balance"],
+            'split' => $input["split"],
+            'bonus' => $input["bonus"]
+        ]);
+        $payout->refresh();
+
+        return redirect()->back()->with('success', 'Payout Updated');
     }
 }

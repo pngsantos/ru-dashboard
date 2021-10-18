@@ -9,7 +9,7 @@
     <tbody>
     @foreach($logs as $log)
         <tr>
-            <td>{{ $log->date->format('Y-m-d') }}</td>
+            <td>{{ $log->date->format('m/d/Y') }}</td>
             <td>{{ $log->account->code }}</td>
             <td>{{ $log->slp }}</td>
         </tr>

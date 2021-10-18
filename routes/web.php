@@ -69,6 +69,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('payout')->group(function () {
         Route::get('{id}/view', 'PayoutController@view')->name('payoutView');
+        Route::get('{id}/edit', 'PayoutController@edit')->name('payoutEdit');
+        Route::post('{id}/update', 'PayoutController@update')->name('updatePayout');
         Route::post('finalize', 'PayoutController@finalize')->name('finalizePayout');
     });
 });

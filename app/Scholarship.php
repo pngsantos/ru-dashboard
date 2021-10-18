@@ -13,6 +13,11 @@ class Scholarship extends Model
         'end_date',
         'created_by',
     ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
     
     public function account()
     {

@@ -21,6 +21,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use App\Exports\LogExports;
 
+use Illuminate\Support\Facades\Cache;
+
 class DashboardController extends Controller
 {
     //
@@ -32,9 +34,9 @@ class DashboardController extends Controller
 
     public function tracker() 
     {   
-        $accounts = Account::with(['logs' => function($query) {
-            $query->whereDate('date', '<=', Carbon::today())->orderBy('date', 'desc')->limit(2);
-        }])->get();
+        $accounts = Cache::remember('accounts', 1800, function() {
+            return Account::with(['scholar', 'logs', 'payouts'])->get();
+        });
 
         return view('tracker')
             ->with('accounts', $accounts);
@@ -83,14 +85,7 @@ class DashboardController extends Controller
             $end_date = Carbon::parse($input['end_date']);
         }
 
-        return Excel::download(new LogExports($start_date, $end_date), "Tests.xlsx");
-
-        /*
-
-        $logs = AccountLog::with(['account'])->whereDate('date', '<=', $end_date)->whereDate('date', '>=', $start_date)->orderBy('date', 'desc')->get();
-
-        $log_array = $logs->map->only('date_string', 'account.code', 'slp')->all();
-        */
+        return Excel::download(new LogExports($start_date, $end_date), "SLP Logs $start_date to $end_date.xlsx");
     }
 
     public function axies()
@@ -120,28 +115,69 @@ class DashboardController extends Controller
             ->with('accounts', $accounts);
     }
 
-    public function payouts()
+    public function payouts(Request $request)
     {
-        $accounts = Account::with(['logs'])->limit(50)->get();
+        $input = $request->all();
 
-        foreach($accounts as $account)
+        $cutoff = Carbon::now()->next(Carbon::SATURDAY);
+
+        if(isset($input['cutoff']))
         {
-            $payout = $account->current_payout;
+            $cutoff = Carbon::parse($input['cutoff']);
+            $account_payouts = Account::with(['logs', 'payouts' => function($query) use ($cutoff) {
+                $query->whereDate('to_date', $cutoff);
+            }])->whereHas('payouts', function ($q) use ($cutoff) {
+                $q->where('to_date', $cutoff);
+            })->get();
+        }
+        else
+        {
+            $account_payouts = Account::with(['logs', 'payouts' => function($query) use ($cutoff) {
+                $query->whereDate('to_date', ">=", $cutoff);
+            }])->get();
+        }
 
-            if($payout)
+        $totals = [
+            'slp' => 0,
+            'diff_days' => 0,
+            'weight' => 0,
+            'avg_slp' => 0,
+            'manager_slp' => 0,
+            'scholar_slp' => 0,
+            'bonus' => 0
+        ];
+
+        foreach($account_payouts as $account)
+        {
+            if($account->payouts->count() > 0)
             {
-                $log = AccountLog::where('account_id', $account->id)->whereDate('date', '>=', $payout->from_date)->whereDate('date', '<=', $payout->to_date)->get();
             }
             else
             {
-                $log = collect([(object)['slp' => '0']]);
+                $account->payouts = collect([$account->current_payout]);
             }
 
-            $account->scope = $log;
+            foreach($account->payouts as $payout)
+            {
+
+                $log = AccountLog::where('account_id', $account->id)->whereDate('date', '>=', $payout->from_date)->whereDate('date', '<=', $payout->to_date)->get();
+                $payout->scope = $log;
+
+                $totals['slp'] = $totals['slp'] + $log->sum('slp');
+                $totals['diff_days'] = $totals['diff_days'] + $payout->diff_days;
+                $totals['weight'] = $totals['weight'] + $payout->weight;
+                $totals['manager_slp'] = $totals['manager_slp'] + (0.01 * $payout->split * $log->sum('slp'));
+                $totals['scholar_slp'] = $totals['manager_slp'] + (0.01 * (100 - $payout->split) * $log->sum('slp'));
+                $totals['bonus'] = $totals['bonus'] + $payout->bonus;
+            }
         }
+        
+        $totals['avg_slp'] = $totals['diff_days'] ? ($totals['slp'] / $totals['diff_days']) : 0;
 
         return view('payouts')
-            ->with('accounts', $accounts);
+            ->with('cutoff', $cutoff)
+            ->with('totals', $totals)
+            ->with('accounts', $account_payouts);
     }
 
     public function test()

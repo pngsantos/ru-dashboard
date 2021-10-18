@@ -120,10 +120,10 @@
 				</div>
 			</td>
 			<td>
-				{{@$account->logs->last()->slp}}
+				-
 			</td>
 			<td>
-				{{@$account->logs->first()->slp}}
+				{{@$account->logs->where('date', \Carbon\Carbon::today()->subDay()->startOfDay())->first()->slp}}
 			</td>
 			<td>
 				{{@$account->logs->pluck('slp')->avg()}}

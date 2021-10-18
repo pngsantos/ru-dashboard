@@ -81,7 +81,7 @@ class AccountsImport implements ToModel, WithHeadingRow
             'notes' => $row["notes"],
             'scholar_start_date' => @$row["scholar_start_date"],
             'start_date' => @$row["start_date"],
-            'balance' => @$row["balance"],
+            'balance' => @$row["starting_balance"],
             'created_by' => @Auth::user()->id,
         ]);
         

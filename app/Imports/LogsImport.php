@@ -51,4 +51,9 @@ class LogsImport implements ToModel, WithHeadingRow
             return \Carbon\Carbon::createFromFormat($format, $value);
         }
     }
+    
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
 }

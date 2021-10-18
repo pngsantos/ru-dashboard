@@ -23,8 +23,8 @@ class CreatePayoutsTable extends Migration
             $table->decimal('bonus')->nullable();
             $table->decimal('balance')->nullable();
             $table->tinyInteger('team_weight')->nullable();
-            $table->datetime('from_date')->nullable();
-            $table->datetime('to_date')->nullable();
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
             $table->timestamps();
         });
     }

@@ -12,11 +12,13 @@ class Payout extends Model
         'scholar_id',
         'status',
         'slp',
+        'usd',
         'team_weight',
         'split',
         'balance',
         'from_date',
         'to_date',
+        'bonus',
     ];
 
     protected $casts = [
@@ -44,6 +46,16 @@ class Payout extends Model
         {
             return Carbon::now()->diffInDays($this->from_date);
         }
+    }
+
+    public function getWeightAttribute()
+    {
+        if($this->team_weight)
+        {
+            return $this->team_weight;
+        }
+
+        return ($this->diff_days/14);
     }
 
     public function getCanFinalizeAttribute()

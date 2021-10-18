@@ -90,7 +90,7 @@
 			<div class="col-6">
 				<div class="form-group">
 				    <label for="scholarStartDate">Started on</label>
-				    <input type="date" class="form-control" id="scholarStartDate" name="scholar_start_date" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" >
+				    <input type="date" class="form-control" id="scholarStartDate" name="scholar_start_date" value="{{@$account->current_scholarship ? @$account->current_scholarship->start_date : '' }}" >
 				</div>
 			</div>
 			<div class="col-6">

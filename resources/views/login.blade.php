@@ -4,7 +4,7 @@
 <form method="post" action="{{route('doLogin')}}" class="form-signin">
 	@csrf
 	<h1 class="mb-4">
-		RU Dashboard
+		RU Port
 	</h1>
 
 	<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
@@ -18,7 +18,7 @@
 
 	<div class="checkbox mb-3">
 		<label>
-			<input type="checkbox" value="remember-me"> Remember me
+			<input type="checkbox" name="remember-me" value="1"> Remember me
 		</label>
 	</div>
 
