@@ -52,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/inventory', 'DashboardController@inventory')->name('inventory');
     Route::get('/payouts', 'DashboardController@payouts')->name('payouts');
 
+    Route::post('/log/export', 'DashboardController@export_logs')->name('logsExport');
+    Route::post('/log/import', 'AccountController@import_logs')->name('logsImport');
+
     Route::prefix('account')->group(function () {
         Route::get('{account_id}/view', 'AccountController@view')->name('accountView');
         Route::get('{account_id}/edit', 'AccountController@edit')->name('accountEdit');
@@ -61,7 +64,6 @@ Route::middleware('auth')->group(function () {
         Route::post('{account_id}/update', 'AccountController@update')->name('accountUpdate');
         Route::post('{account_id}/update_scholar', 'AccountController@update_scholar')->name('scholarUpdate');
         Route::post('import', 'AccountController@import')->name('accountsImport');
-        Route::post('import_logs', 'AccountController@import_logs')->name('logsImport');
         Route::post('kick_scholar', 'AccountController@kick_scholar')->name('kickScholar');
     });
 

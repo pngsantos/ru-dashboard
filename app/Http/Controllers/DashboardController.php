@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Exports\LogExports;
 
 class DashboardController extends Controller
 {
@@ -30,7 +33,7 @@ class DashboardController extends Controller
     public function tracker() 
     {   
         $accounts = Account::with(['logs' => function($query) {
-            $query->whereDate('date', '<', Carbon::today())->orderBy('date', 'desc')->limit(2);
+            $query->whereDate('date', '<=', Carbon::today())->orderBy('date', 'desc')->limit(2);
         }])->get();
 
         return view('tracker')
@@ -39,6 +42,8 @@ class DashboardController extends Controller
 
     public function daily_log(Request $request) 
     {   
+        $input = $request->all();
+
         $start_date = Carbon::now()->subDays(14);
         if(isset($input['start_date']))
         {
@@ -60,6 +65,32 @@ class DashboardController extends Controller
         return view('daily_log')
             ->with('period', $period)
             ->with('accounts', $accounts);
+    }
+
+    public function export_logs(Request $request)
+    {
+        $input = $request->all();
+
+        $start_date = Carbon::now()->subDays(14);
+        if(isset($input['start_date']))
+        {
+            $start_date = Carbon::parse($input['start_date']);
+        }
+
+        $end_date = Carbon::now();
+        if(isset($input['end_date']))
+        {
+            $end_date = Carbon::parse($input['end_date']);
+        }
+
+        return Excel::download(new LogExports($start_date, $end_date), "Tests.xlsx");
+
+        /*
+
+        $logs = AccountLog::with(['account'])->whereDate('date', '<=', $end_date)->whereDate('date', '>=', $start_date)->orderBy('date', 'desc')->get();
+
+        $log_array = $logs->map->only('date_string', 'account.code', 'slp')->all();
+        */
     }
 
     public function axies()

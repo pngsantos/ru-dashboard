@@ -55,7 +55,7 @@
 		<div class="row">
 			<div class="col-6">
 				<div class="form-group">
-				    <label for="startDate">Start Date</label>
+				    <label for="startDate">Account Start Date</label>
 				    <input type="date" class="form-control" id="startDate" name="start_date">
 				</div>
 			</div>
@@ -86,9 +86,19 @@
 			</div>
 		</div>
 
-    	<div class="form-group">
-		    <label for="scholarEmail">Email</label>
-		    <input type="email" class="form-control" id="scholarEmail" name="email">
+		<div class="row">
+			<div class="col-6">
+				<div class="form-group">
+				    <label for="scholarStartDate">Started on</label>
+				    <input type="date" class="form-control" id="scholarStartDate" name="scholar_start_date" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" >
+				</div>
+			</div>
+			<div class="col-6">
+		    	<div class="form-group">
+				    <label for="scholarEmail">Email</label>
+				    <input type="email" class="form-control" id="scholarEmail" name="email">
+				</div>
+			</div>
 		</div>
 
     	<div class="form-group">

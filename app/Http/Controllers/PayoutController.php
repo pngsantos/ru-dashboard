@@ -17,6 +17,16 @@ use Illuminate\Support\Facades\Http;
 class PayoutController extends Controller
 {
     //
+    public function initialize()
+    {
+        $accounts = Account::whereNotNull('scholar_id')->get();
+
+        foreach($accounts as $account)
+        {
+            
+        }
+    }
+
     public function finalize(Request $request)
     {
         $input = $request->all();

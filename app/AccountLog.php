@@ -19,6 +19,11 @@ class AccountLog extends Model
     protected $casts = [
         'date' => 'date:Y-m-d'
     ];
+
+    public function getDateStringAttribute($format = 'Y-m-d')
+    {
+        return $this->date->format('Y-m-d');
+    }
     
     public function account()
     {

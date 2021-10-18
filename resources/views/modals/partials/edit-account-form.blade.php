@@ -55,7 +55,7 @@
 		<div class="row">
 			<div class="col-6">
 				<div class="form-group">
-				    <label for="startDate">Start Date</label>
+				    <label for="startDate">Account Start Date</label>
 				    <input type="date" class="form-control" id="startDate" name="start_date" value="{{$account->start_date ? $account->start_date->format('Y-m-d') : ''}}">
 				</div>
 			</div>
@@ -86,11 +86,20 @@
 			</div>
 		</div>
 
-    	<div class="form-group">
-		    <label for="scholarEmail">Email</label>
-		    <input type="email" class="form-control" id="scholarEmail" name="email" value="{{@$account->scholar->email}}">
+		<div class="row">
+			<div class="col-6">
+				<div class="form-group">
+				    <label for="scholarStartDate">Started on</label>
+				    <input type="date" class="form-control" id="scholarStartDate" name="scholar_start_date" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" >
+				</div>
+			</div>
+			<div class="col-6">
+		    	<div class="form-group">
+				    <label for="scholarEmail">Email</label>
+				    <input type="email" class="form-control" id="scholarEmail" name="email" value="{{@$account->scholar->email}}">
+				</div>
+			</div>
 		</div>
-
     	<div class="form-group">
 		    <label for="paymentMethod">Payment Method</label>
 		    {!! Form::select('payment_method', ['gcash'=>'GCash', 'ronin'=>'Ronin'], @$account->scholar->payment_method,  ['class'=>'form-control', 'placeholder'=>'Payment Method',  'onchange'=>"toggleAccountNumber(this)"]) !!}

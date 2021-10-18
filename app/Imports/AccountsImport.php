@@ -79,6 +79,7 @@ class AccountsImport implements ToModel, WithHeadingRow
             'split' => $row['split'],
             'owner' => $row["owner"],
             'notes' => $row["notes"],
+            'scholar_start_date' => @$row["scholar_start_date"],
             'start_date' => @$row["start_date"],
             'balance' => @$row["balance"],
             'created_by' => @Auth::user()->id,

@@ -16,10 +16,8 @@
 <table class="table table-striped table-sm spreadsheet header-sticky">
 	<thead class="thead-dark">
 		<tr>
-			<th style="width: 50px;vertical-align: middle;" class="text-center">
-				<div class="form-check">
-				  	<input class="form-check-input" name="finalize_all" type="checkbox" value="1" checked="checked" id="select-all" />
-				</div>
+			<th style="width: 50px;" class="text-center">
+				<input name="finalize_all" type="checkbox" value="1" checked="checked" id="select-all" />
 			</th>
 			<th scope="col">Code</th>
 			<th scope="col">Name</th>
@@ -89,7 +87,7 @@
 				<input type="number" value="{{$account->current_payout->bonus}}" name="bonus" {!! $account->current_payout->status == 'final' ? "disabled='disabled'" : "" !!} />
 			</td>
 			@else
-			<td colspan="10">No payout</td>
+			<td colspan="11">No payout</td>
 			@endif
 		</tr>
 		@empty

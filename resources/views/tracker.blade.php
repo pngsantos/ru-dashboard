@@ -123,7 +123,7 @@
 				{{@$account->logs->last()->slp}}
 			</td>
 			<td>
-				{{@$account->logs->take(-2)->first()->slp}}
+				{{@$account->logs->first()->slp}}
 			</td>
 			<td>
 				{{@$account->logs->pluck('slp')->avg()}}

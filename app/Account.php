@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Account extends Model
 {   
-    protected $balance;
+    protected $scholar_start_date;
 
     protected $fillable = [
         'name',
@@ -24,11 +24,17 @@ class Account extends Model
         'ronin_address',
         'tags',
         'split',
+
+        /* Game data */
         'mmr',
         'unclaimed_slp',
-        'start_date',
         'next_claim_date',
+
+        /* Onboarding */
+        'start_date',
+        'balance',
         'owner',
+        
         'notes',
         'created_by',
     ];
@@ -69,6 +75,13 @@ class Account extends Model
         return $this->hasMany('App\Scholarship', 'account_id', 'id');
     }
 
+    public function geFirstPayoutAttribute()
+    {
+        $payout = $this->date_started->next(Carbon::SATURDAY)->addDays(14);
+
+        return (!$payout->isPast());
+    }
+
     public function getDateStartedAttribute()
     {
         if($this->start_date)
@@ -98,9 +111,9 @@ class Account extends Model
     {
         parent::__construct($attributes);
 
-        if(isset($attributes['balance']))
+        if(isset($attributes['scholar_start_date']))
         {
-            $this->balance = $attributes['balance'];
+            $this->scholar_start_date = $attributes['scholar_start_date'];
         }
     }
 
@@ -165,37 +178,14 @@ class Account extends Model
                     $scholarship = Scholarship::create([
                         'account_id' => $this->id,
                         'scholar_id' => $this->scholar_id,
-                        'start_date' => $this->date_started,
+                        'start_date' => $this->scholar_start_date ? $this->scholar_start_date : $this->date_started,
                         'end_date' => null,
                         'created_by' => $this->created_by,
                     ]);
                 }
 
-                $this->create_new_payout();
+                $this->create_new_payout($scholarship->start_date);
             }
-        }
-        elseif($start_date != $this->start_date)
-        {
-            if($this->start_date->isBefore($start_date))
-            {
-                if($this->current_payout)
-                {
-                    $this->current_payout->update([
-                        'from_date' => $this->date_started,
-                        'balance' => $this->balance,
-                        'to_date' => $this->date_started->next(Carbon::SATURDAY)->addDays(14),
-                    ]);
-                }
-                else
-                {
-                    $this->create_new_payout();
-                }
-            }
-            else
-            {
-                $this->create_new_payout();
-            }
-            
         }
 
         return $return;
@@ -227,7 +217,7 @@ class Account extends Model
         $this->save();
     }
 
-    private function create_new_payout()
+    private function create_new_payout($start_date = false)
     {
         //End current payout
         $payout = Payout::where('account_id', $this->id)->where(function($query) {
@@ -240,16 +230,73 @@ class Account extends Model
             $payout->save();
         }
 
-        //Create the first payout
-        Payout::create([
-            'account_id' => $this->id,
-            'scholar_id' => $this->scholar_id,
-            'slp' => null,
-            'team_weight' => null,
-            'split' => $this->split,
-            'from_date' => $this->date_started,
-            'balance' => $this->balance,
-            'to_date' => $this->date_started->next(Carbon::SATURDAY)->addDays(14),
-        ]);
+        if(!$start_date)
+        {
+            $next_payout = $this->date_started->next(Carbon::SATURDAY)->addDays(14);
+        }
+        else
+        {
+            $next_payout = $start_date->next(Carbon::SATURDAY)->addDays(14);
+        }
+        
+        //Check if new account
+
+        if($next_payout->isPast())
+        {
+            //Create the first payout
+            $new_payout = Payout::create([
+                'account_id' => $this->id,
+                'scholar_id' => $this->scholar_id,
+                'slp' => null,
+                'team_weight' => null,
+                'split' => $this->split,
+                'from_date' => $this->date_started,
+                'balance' => $this->balance,
+                'to_date' =>  Carbon::now()->next(Carbon::SATURDAY),
+            ]);
+        }
+        else
+        {
+            //Create the first payout
+            $new_payout = Payout::create([
+                'account_id' => $this->id,
+                'scholar_id' => $this->scholar_id,
+                'slp' => null,
+                'team_weight' => null,
+                'split' => $this->split,
+                'from_date' => $this->date_started,
+                'balance' => $this->balance,
+                'to_date' => $next_payout,
+            ]);
+        }
+
+        return $new_payout;
     }
+
+    /*
+
+        elseif($start_date != $this->start_date)
+        {
+            if($this->start_date->isBefore($start_date))
+            {
+                if($this->current_payout)
+                {
+                    $this->current_payout->update([
+                        'from_date' => $this->date_started,
+                        'balance' => $this->balance,
+                        'to_date' => $this->date_started->next(Carbon::SATURDAY)->addDays(14),
+                    ]);
+                }
+                else
+                {
+                    $this->create_new_payout();
+                }
+            }
+            else
+            {
+                $this->create_new_payout();
+            }
+            
+        }
+    */
 }

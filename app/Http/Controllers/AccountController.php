@@ -63,6 +63,7 @@ class AccountController extends Controller
             'split' => $input['split'],
             'owner' => $input["owner"],
             'start_date' => $input["start_date"],
+            'scholar_start_date' => $input["scholar_start_date"],
             'balance' => $input["balance"],
             'notes' => $input["notes"]
         ]);

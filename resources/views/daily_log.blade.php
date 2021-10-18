@@ -4,7 +4,24 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center my-3">
     <h1 class="h2">Daily SLP log</h1>
 	<div>
-	  	Toolbar here
+		<form action="" class="form-inline">
+			<label class="sr-only" for="inlineFormInputGroupUsername2">From</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<div class="input-group-prepend">
+					<div class="input-group-text">From</div>
+				</div>
+				<input type="date" class="form-control" id="" placeholder="From" value="{{\Carbon\Carbon::now()->subDays(14)->format('Y-m-d')}}" name="start_date">
+			</div>
+			<label class="sr-only" for="inlineFormInputGroupUsername2">To</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<div class="input-group-prepend">
+					<div class="input-group-text">To</div>
+				</div>
+				<input type="date" class="form-control" id="" placeholder="To" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}" name="end_date">
+			</div>
+	  		<button type="submit" class="btn btn-primary mb-2">Filter</button>
+	  		<button type="button" class="btn btn-secondary mb-2 ml-2" data-toggle="modal" data-target="#export-log-modal">Export</button>
+		</form>
 	</div>
 </div>
 
@@ -49,3 +66,9 @@
  </table>
 
 @endsection
+
+@push('added-modals')
+
+@include('modals.export-log')
+
+@endpush
