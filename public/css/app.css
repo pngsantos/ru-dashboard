@@ -11089,6 +11089,7 @@ body#login .bd-placeholder-img {
 
 table.spreadsheet td input[type=text],
 table.spreadsheet td input[type=number],
+table.spreadsheet td input[type=date],
 table.spreadsheet td input select {
   width: 100%;
 }

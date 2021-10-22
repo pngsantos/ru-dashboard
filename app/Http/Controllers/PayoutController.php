@@ -69,21 +69,31 @@ class PayoutController extends Controller
         return response($response, 200);
     }
 
-    public function update($payout_id, Request $request)
+    public function update(Request $request)
     {
         $input = $request->all();
 
-        $payout = Payout::find($payout_id);
+        $payout = Payout::find($input['id']);
 
         $payout->update([
-            'from_date' => $input["from_date"],
-            'to_date' => $input["to_date"],
-            'balance' => $input["balance"],
-            'split' => $input["split"],
-            'bonus' => $input["bonus"]
+            'from_date' => @$input["from_date"],
+            'to_date' => @$input["to_date"],
+            'bonus' => @$input["bonus"]
         ]);
+
         $payout->refresh();
 
-        return redirect()->back()->with('success', 'Payout Updated');
+        if($request->ajax())
+        {
+            $response = [];
+            $response['data'] = $payout;
+            $status = 200;
+
+            return response($response, $status);
+        }
+        else
+        {
+            return redirect()->back()->with('success', 'Payout Updated');
+        }
     }
 }

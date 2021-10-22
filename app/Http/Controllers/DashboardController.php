@@ -34,9 +34,9 @@ class DashboardController extends Controller
 
     public function tracker() 
     {   
-        $accounts = Cache::remember('accounts', 1800, function() {
-            return Account::with(['scholar', 'logs', 'payouts'])->get();
-        });
+        $accounts = Account::with(['logs' => function($query) {
+            $query->whereDate('date', '<=', Carbon::today())->orderBy('date', 'desc')->limit(2);
+        }])->get();
 
         return view('tracker')
             ->with('accounts', $accounts);
@@ -98,7 +98,7 @@ class DashboardController extends Controller
 
     public function inventory()
     {
-        $accounts = Account::get();
+        $accounts = Account::with()->get();
 
         $owners = $accounts->groupBy('owner');
 

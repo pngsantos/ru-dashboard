@@ -61,7 +61,7 @@
 		@forelse($account->payouts as $payout)
 		<tr class="{{@$payout->status == 'final' ? 'table-success' : ''}}" data-id="{{@$payout->id}}">
 			<td class="text-center">
-				@if($payout->can_finalize)
+				@if($payout->status != 'final')
 			  	<input name="finalize[]" type="checkbox" value="1" checked="checked">
 			  	@else
 			  	<input type="checkbox" value="1" checked="checked" disabled="disabled">
@@ -74,28 +74,10 @@
 				{{$payout->scholar->name}}
 			</td>
 			<td>
-				{{@$payout->from_date->format('M-d')}}
-
-				@if($payout->status != 'final')
-				<button class="btn btn-sm btn-light" data-modal="#manage-account-modal" data-route="{{route('payoutEdit', [$payout->id])}}">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-					  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-					  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-					</svg>
-				</button>
-				@endif
+				<input type="date" name="from_date" value="{{@$payout->from_date->format('Y-m-d')}}" />
 			</td>
 			<td>
-				{{@$payout->to_date->format('M-d')}}
-
-				@if($payout->status != 'final')
-				<button class="btn btn-sm btn-light" data-modal="#manage-account-modal" data-route="{{route('payoutEdit', [$payout->id])}}">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-					  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-					  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-					</svg>
-				</button>
-				@endif
+				<input type="date" name="to_date" value="{{@$payout->to_date->format('Y-m-d')}}" />
 			</td>
 			<td>
 				{{$payout->scope->sum('slp')}}
@@ -197,6 +179,29 @@ $( document ).ready(function() {
 		$("#finalize-all span").html("(" + checked + ")");
 	});
 
+	$("*[name='from_date'], *[name='to_date'], *[name='bonus']").change(function(){
+		let $tr = $(this).closest('tr');
+
+    	let id = $tr.data('id');
+    	let data = $tr.find(":input").serializeArray();
+    	data.push({"name":'id', 'value':id});
+
+    	$.ajax({
+            type: 'post',
+            url: "{{route('updatePayout')}}",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: data,
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (data, text, error) {
+                console.log(data);
+            }
+        });
+	});
+
 	$("#finalize-all").click(function(){
 		if(!$("#fx-rate").val())
 		{
@@ -284,13 +289,15 @@ $( document ).ready(function() {
 
 	$.ajax({
 		type: 'get',
-		url: "https://bloomx.app/rates.json",
+		url: "https://api.coingecko.com/api/v3/coins/smooth-love-potion",
 		success: function (response) {
             console.log(response);
 
-            if(response.SLP)
+            if(response.market_data.current_price.usd)
             {
-            	$("#fx-rate").val(response.SLP.buy);
+            	$("#fx-rate").val(response.market_data.current_price.usd);
+
+            	updateUSD(parseFloat(response.market_data.current_price.usd));
             }
         }
 	});
@@ -298,11 +305,16 @@ $( document ).ready(function() {
 	$("#fx-rate").change(function(){
 		let rate = parseFloat($(this).val());
 
-		$("*[data-slp_to_usd]").each(function(){
-			let slp = $(this).data('slp_to_usd');
-			$(this).html( "$ " + (slp * rate).toFixed(2) );
-		});
+		updateUSD(rate);
 	});
 });
+
+function updateUSD(rate)
+{
+	$("*[data-slp_to_usd]").each(function(){
+		let slp = $(this).data('slp_to_usd');
+		$(this).html( "$ " + (slp * rate).toFixed(2) );
+	});
+}
 </script>
 @endpush

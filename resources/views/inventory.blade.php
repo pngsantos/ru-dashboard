@@ -32,7 +32,7 @@
 						<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{$account->owner}}</a>
 					</td>
 					<td>
-						1.0
+						<a href="{{route('accountView', [$account->id])}}" class="font-weight-bold">{{$account->current_payout->weight}}</a>
 					</td>
 				</tr>
 				@empty
@@ -74,7 +74,9 @@
 					<td>
 						{{$owned->count()}}
 					</td>
-					<td></td>
+					<td>
+						{{$owned->sum('account.current_payout->weight')}}
+					</td>
 				</tr>
 				@empty
 				<tr>
