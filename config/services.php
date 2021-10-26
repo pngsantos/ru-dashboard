@@ -30,4 +30,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'p2eb' => [
+        'key' => env('P2EB_KEY')
+    ],
 ];
